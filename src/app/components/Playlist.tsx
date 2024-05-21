@@ -1,31 +1,39 @@
 import React, { ChangeEvent } from "react";
 import TrackList from "./TrackList";
-import { Track } from "../page";
+import { Tracks } from "../page";
 
 interface PlaylistProps {
-  playlistTracks: Track[];
-  onRemove: (id: string) => void;
+  playlistTracks: Tracks[];
+  onRemove: (track: Tracks) => void;
   onNameChange: (name: string) => void;
-  onAdd?: () => void;
 }
 
 const Playlist: React.FC<PlaylistProps> = ({
   playlistTracks,
   onRemove,
   onNameChange,
-
 }) => {
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     onNameChange(event.target.value);
   };
 
   return (
-    <div className="flex flex-col m-5 border flex-1 justify-items-center" >
+    <div className="flex flex-col m-5  flex-1 justify-items-center" >
+      
       <input 
       defaultValue={"New Playlist"} 
       onChange={handleNameChange} 
-      className=" bg-stone-800 text-center mx-2 my-4 text-xl"/>
-      <button className="border rounded-md w-fit p-5 mx-auto hover:bg-green-900" >SAVE TO SPOTIFY</button>
+      className=" bg-stone-800 text-center mx-2 my-4 text-xl"
+      />
+
+      <TrackList tracks={playlistTracks} onRemove={onRemove}  isRemoval={true} />
+
+      <button 
+      className="border rounded-md w-fit p-5 mx-auto hover:bg-green-900" 
+      onClick={() => console.log("Save to Spotify button pressed!")}
+      >
+        SAVE TO SPOTIFY
+      </button>
     </div>
   );
 };

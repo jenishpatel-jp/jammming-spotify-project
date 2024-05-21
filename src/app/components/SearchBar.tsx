@@ -3,7 +3,11 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import React, { useState, ChangeEvent } from 'react'
 
-const SearchBar = (  ) => {
+interface SearchBarProps {
+    onSearch: (term: string) => void;
+}
+
+const SearchBar: React.FC<SearchBarProps> = (  ) => {
     const [term, setTerm] = useState<string>('');
 
     const handleTermChange = (event: ChangeEvent<HTMLInputElement>) => {

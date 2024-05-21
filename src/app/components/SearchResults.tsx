@@ -1,14 +1,17 @@
 import React from 'react'
 import TrackList from './TrackList'
+import { Tracks } from '../page';
 
-const SearchResults = () => {
+interface SearchResultsProps {
+  searchResults: Tracks[];
+  onAdd: (track: Tracks) => void;
+}
+
+const SearchResults: React.FC<SearchResultsProps> = ({searchResults, onAdd}) => {
   return (
     <div className='flex flex-col flex-1 border'>
       <div className='mx-2 my-5' >
-        <h1 className='mx-2 my-2' >Search Results</h1>
-        <p className='mx-2 my-2'>Song 1</p>
-        <p className='mx-2 my-2'>Song 2</p>
-        <p className='mx-2 my-2'>Song 3</p>
+        <TrackList tracks={searchResults} onAdd={onAdd} isRemoval={false} />
       </div>
     </div>
   );
