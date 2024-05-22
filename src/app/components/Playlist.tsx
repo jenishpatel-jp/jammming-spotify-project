@@ -24,9 +24,9 @@ const Playlist: React.FC<PlaylistProps> = ({
     <div className="flex flex-col m-5  flex-1 justify-items-center" >
       
       <input 
-      defaultValue={"New Playlist"} 
+      defaultValue={"Enter Playlist Name"} 
       onChange={handleNameChange} 
-      className=" bg-stone-800 text-center mx-2 my-4 text-xl"
+      className=" bg-stone-800 text-center mx-2 my-4 text-xl p-4"
       />
 
       <TrackList tracks={playlistTracks} onRemove={onRemove}  isRemoval={true} />
