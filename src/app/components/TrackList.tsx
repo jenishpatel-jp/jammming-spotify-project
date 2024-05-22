@@ -1,6 +1,5 @@
 import React from 'react'
 import Track from './Track'
-import data from '../sample.data.json'
 import { Tracks } from '../page'
 
 interface TrackListProps {
