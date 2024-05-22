@@ -20,9 +20,9 @@ const Track: React.FC<TrackProps> = ({track, isRemoval, onAdd, onRemove}) => {
 
     const renderAction = () => {
         if (isRemoval) {
-            return <button className='text-2xl mx-10 hover:text-4xl p-7 hover:bg-stone-700 rounded-full ' >-</button>
+            return <button className='text-2xl mx-10 hover:text-4xl p-7 hover:bg-stone-700 rounded-full' onClick={passTrackToRemove} >-</button>
         } else {
-            return <button className='text-2xl mx-10 hover:text-4xl p-7 hover:bg-stone-700 rounded-full ' >+</button>
+            return <button className='text-2xl mx-10 hover:text-4xl p-7 hover:bg-stone-700 rounded-full' onClick={passTrack} >+</button>
         }
     }
 

@@ -13,6 +13,7 @@ const Playlist: React.FC<PlaylistProps> = ({
   onRemove,
   onNameChange,
 }) => {
+
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     onNameChange(event.target.value);
   };
@@ -30,7 +31,6 @@ const Playlist: React.FC<PlaylistProps> = ({
 
       <button 
       className="border rounded-md w-fit p-5 mx-auto hover:bg-green-900" 
-      onClick={() => console.log("Save to Spotify button pressed!")}
       >
         SAVE TO SPOTIFY
       </button>

@@ -7,15 +7,16 @@ interface SearchBarProps {
     onSearch: (term: string) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = (  ) => {
+const SearchBar: React.FC<SearchBarProps> = ( {onSearch} ) => {
     const [term, setTerm] = useState<string>('');
+
+    const passTerm = () => {
+        onSearch(term);
+        console.log("I'm searching for " + term)
+    }
 
     const handleTermChange = (event: ChangeEvent<HTMLInputElement>) => {
         setTerm(event.target.value);
-    }
-
-    const handleButtonClick = () => {
-        console.log("Search button pressed");
     }
 
     return (
@@ -25,11 +26,12 @@ const SearchBar: React.FC<SearchBarProps> = (  ) => {
             className='h-10 w-full text-center text-black'
             onChange={handleTermChange}
             onKeyDownCapture={ e => {if (e.key === 'Enter'){
-                console.log("Enter has been pressed");
+                console.log(`I have pressed enter and I am searching for ${term}`)
+                passTerm();
             }}}
             />              
             <button
-            onClick={handleButtonClick}
+            onClick={passTerm}
             >
                 <MagnifyingGlassIcon className = "text-black bg-white h-10 max-w-10" />
             </button>

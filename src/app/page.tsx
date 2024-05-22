@@ -5,7 +5,7 @@ import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from 'react';
 import SearchResults from "./components/SearchResults";
 import Playlist from "./components/Playlist";
-import data from './sample.data.json'
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export interface Tracks {
   id:string;
@@ -15,36 +15,29 @@ export interface Tracks {
   uri: string;
 }
 
+interface CustomSessionUser {
+  accessToken?: string; 
+  refreshToken?: string;
+  accessTokenExpires: number;
+  name?: string;
+  email?: string;
+  image?: string;
+}
+
 export default function Home() {
+  const {data: session, status} = useSession();
   const [accessToken, setAccessToken] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tracks[]>([]);
   const [playlistName, setPlayListName] = useState<string>("");
   const [playlistTracks, setPlaylistTracks] = useState<Tracks[]>([]);
 
   useEffect(() => {
-    // API Access Token
-    const fetchAccessToken = async() => {
-      try {
-        const authParameters =  {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: 'grant_type=client_credentials&client_id=' + process.env.CLIENT_ID + '&client_secret=' + process.env.CLIENT_SECRET
-        };
-
-        const response = await fetch('https://accounts.spotify.com/api/token', authParameters);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status ${response.status}`)
-        }
-        const data = await response.json();
-        setAccessToken(data.access_token);
-      } catch(error){
-        console.error('Failed to fetch access token:', error)
-      }
-    }
-
-  }, []);
+    if (session?.user) {
+      setAccessToken((session.user as CustomSessionUser).accessToken || "");
+    };
+    console.log(accessToken)
+  }, 
+  [session]);
 
 
   const addTrack = (track: Tracks) => {
@@ -53,7 +46,7 @@ export default function Home() {
     if (existingTrack) {
       console.log('Track already exists');
     } else {
-      setPlaylistTracks(newTrack)
+      setPlaylistTracks(newTrack);
     }
   }
 
@@ -76,7 +69,7 @@ export default function Home() {
   }
 
   const search = async (term:string) => {
-    console.log(term)
+    console.log(term);
 
     try {
       const response = await fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, searchParameters);
@@ -97,7 +90,7 @@ export default function Home() {
     }
   }
 
-  const savePlaylist = async(name: string, trackUris: string) => {
+  const savePlaylist = async() => {
     try {
       const response = await fetch('https://api.spotify.com/v1/me', searchParameters);
       if (!response.ok) {
