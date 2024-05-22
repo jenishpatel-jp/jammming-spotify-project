@@ -1,11 +1,10 @@
-
 import NextAuth, { NextAuthOptions, Session, Account, Profile as NextAuthProfile, User } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { JWT } from "next-auth/jwt";
 
 // Extend Profile to include Spotify-specific properties
 interface SpotifyProfile extends NextAuthProfile {
-  id: string;
+  id?: string;
   display_name: string;
   images: { url: string }[];
 }
@@ -18,6 +17,7 @@ interface CustomToken extends JWT {
 
 interface CustomSession extends Session {
   user: {
+    id?: string;
     accessToken?: string;
     refreshToken?: string;
     accessTokenExpires?: number;
@@ -37,12 +37,12 @@ export const authOptions: NextAuthOptions = {
           scope: "user-read-email user-read-private playlist-modify-public playlist-modify-private"
         }
       },
-      profile(profile: SpotifyProfile) {
+      profile(profile: SpotifyProfile): User {
         return {
-          id: profile.id,
+          id: profile.id || "",
           name: profile.display_name,
-          email: profile.email,
-          image: profile.images?.[0]?.url
+          email: profile.email ?? undefined,
+          image: profile.images?.[0]?.url ?? null,
         };
       }
     })
@@ -63,6 +63,7 @@ export const authOptions: NextAuthOptions = {
 
       if (!customSession.user) {
         customSession.user = {
+          id:"",
           accessToken: undefined,
           refreshToken: undefined,
           accessTokenExpires: undefined,

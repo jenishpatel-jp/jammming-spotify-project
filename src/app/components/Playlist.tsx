@@ -6,12 +6,14 @@ interface PlaylistProps {
   playlistTracks: Tracks[];
   onRemove: (track: Tracks) => void;
   onNameChange: (name: string) => void;
+  savePlaylist: () => void;
 }
 
 const Playlist: React.FC<PlaylistProps> = ({
   playlistTracks,
   onRemove,
   onNameChange,
+  savePlaylist
 }) => {
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +32,8 @@ const Playlist: React.FC<PlaylistProps> = ({
       <TrackList tracks={playlistTracks} onRemove={onRemove}  isRemoval={true} />
 
       <button 
-      className="border rounded-md w-fit p-5 mx-auto hover:bg-green-900" 
+      className="border rounded-md w-fit p-5 mx-auto hover:bg-green-900"
+      onClick={savePlaylist}
       >
         SAVE TO SPOTIFY
       </button>
