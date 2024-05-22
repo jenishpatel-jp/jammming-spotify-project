@@ -5,7 +5,7 @@ import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from 'react';
 import SearchResults from "./components/SearchResults";
 import Playlist from "./components/Playlist";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn} from "next-auth/react";
 
 export interface Tracks {
   id:string;
