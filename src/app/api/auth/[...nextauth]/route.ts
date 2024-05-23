@@ -27,15 +27,15 @@ interface CustomSession extends Session {
   };
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID ?? "",
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET ?? "",
       authorization: {
         params: {
-          scope: "user-read-email user-read-private playlist-modify-public playlist-modify-private"
-        }
+          scope: "user-read-email user-read-private playlist-modify-public playlist-modify-private",
+        },
       },
       profile(profile: SpotifyProfile): User {
         return {
@@ -44,8 +44,8 @@ export const authOptions: NextAuthOptions = {
           email: profile.email ?? undefined,
           image: profile.images?.[0]?.url ?? null,
         };
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, account }: { token: CustomToken; account?: Account | null }) {
@@ -59,11 +59,10 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }: { session: Session; token: CustomToken }) {
       // Cast session to CustomSession type
       const customSession = session as CustomSession;
-      
 
       if (!customSession.user) {
         customSession.user = {
-          id:"",
+          id: "",
           accessToken: undefined,
           refreshToken: undefined,
           accessTokenExpires: undefined,
@@ -76,11 +75,10 @@ export const authOptions: NextAuthOptions = {
       customSession.user.accessToken = token.accessToken;
       customSession.user.refreshToken = token.refreshToken;
       customSession.user.accessTokenExpires = token.accessTokenExpires;
-      
+
       return customSession;
-    }
-  }
+    },
+  },
 };
 
-export const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export default NextAuth(authOptions);
