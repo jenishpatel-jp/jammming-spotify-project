@@ -25,7 +25,7 @@ interface CustomSessionUser {
 }
 
 export default function Home() {
-  const {data: session, status} = useSession();
+  const {data: session} = useSession();
   const [accessToken, setAccessToken] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tracks[]>([]);
   const [playlistName, setPlayListName] = useState<string>("");
