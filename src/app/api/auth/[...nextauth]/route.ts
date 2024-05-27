@@ -2,7 +2,6 @@ import NextAuth, { NextAuthOptions, Session, Account, Profile as NextAuthProfile
 import SpotifyProvider from "next-auth/providers/spotify";
 import { JWT } from "next-auth/jwt";
 
-// Extend Profile to include Spotify-specific properties
 interface SpotifyProfile extends NextAuthProfile {
   id?: string;
   display_name: string;
@@ -49,34 +48,50 @@ const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account }: { token: CustomToken; account?: Account | null }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
-        token.accessTokenExpires = (account.expires_at ? account.expires_at : Date.now() / 1000) * 1000;
+      try {
+        if (account) {
+          console.log("Account:", account);
+          token.accessToken = account.access_token;
+          token.refreshToken = account.refresh_token;
+          token.accessTokenExpires = (account.expires_at ? account.expires_at : Date.now() / 1000) * 1000;
+        }
+        return token;
+      } catch (error) {
+        console.error("JWT Callback Error:", error);
+        throw error;
       }
-      return token;
     },
+
+
     async session({ session, token }: { session: Session; token: CustomToken }) {
-      // Cast session to CustomSession type
-      const customSession = session as CustomSession;
 
-      if (!customSession.user) {
-        customSession.user = {
-          id: "",
-          accessToken: undefined,
-          refreshToken: undefined,
-          accessTokenExpires: undefined,
-          name: null,
-          email: null,
-          image: null,
-        };
+      try {
+
+        const customSession = session as CustomSession;
+
+        if (!customSession.user) {
+          customSession.user = {
+            id: "",
+            accessToken: undefined,
+            refreshToken: undefined,
+            accessTokenExpires: undefined,
+            name: null,
+            email: null,
+            image: null,
+          };
+        }
+  
+        customSession.user.accessToken = token.accessToken;
+        customSession.user.refreshToken = token.refreshToken;
+        customSession.user.accessTokenExpires = token.accessTokenExpires;
+  
+        return customSession;
+
+      } catch (error){
+        console.error("Session Callback Error:", error);
+        throw error;
       }
-
-      customSession.user.accessToken = token.accessToken;
-      customSession.user.refreshToken = token.refreshToken;
-      customSession.user.accessTokenExpires = token.accessTokenExpires;
-
-      return customSession;
+        
     },
   },
 };
