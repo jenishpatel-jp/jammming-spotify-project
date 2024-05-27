@@ -21,12 +21,12 @@ const Playlist: React.FC<PlaylistProps> = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 justify-items-center border border-blue-500 ml-5 p-2" >
+    <div className="flex flex-col flex-1 justify-items-center border-2 border-purple-500 ml-10 p-2" >
       
       <input 
       defaultValue={"Enter Playlist Name"} 
       onChange={handleNameChange} 
-      className="border text-center mx-2 my-4 text-xl p-4 text-purple"
+      className="border-2 text-center mx-2 my-4 text-xl p-4 text-purple focus:border-purple-500"
       />
 
       <TrackList tracks={playlistTracks} onRemove={onRemove}  isRemoval={true} />

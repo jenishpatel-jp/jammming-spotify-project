@@ -194,7 +194,7 @@ export default function Home() {
       <Header/>
       <h1 className="m-4 p-5 text-5xl">Jammming</h1>
       <SearchBar onSearch={search} />
-      <div className="border flex flex-row mt-4 flex-1 w-full justify-between border-yellow-500">
+      <div className="flex flex-row mt-4 flex-1 w-full justify-between">
         <SearchResults searchResults={searchResults} onAdd={addTrack} />
         <Playlist playlistTracks={playlistTracks} onRemove={removeTrack} onNameChange={updatePlaylistName} savePlaylist={savePlaylist} />
       </div>

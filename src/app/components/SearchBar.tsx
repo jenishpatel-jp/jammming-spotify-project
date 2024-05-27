@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ( {onSearch} ) => {
         <div className='flex w-full'>
             <input
             placeholder='Search for a Song or Artist here'
-            className='h-10 w-full text-center text-purple-500 bg-pink-200 border'
+            className='h-10 w-full text-center bg-pink-200 border-2 border-purple-500 rounded-md placeholder-purple-500 focus:border-purple-500'
             onChange={handleTermChange}
             onKeyDownCapture={ e => {if (e.key === 'Enter'){
                 console.log(`I have pressed enter and I am searching for ${term}`)
