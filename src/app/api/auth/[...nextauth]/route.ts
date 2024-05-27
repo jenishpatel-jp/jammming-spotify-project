@@ -46,7 +46,8 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
     async jwt({ token, account }: { token: CustomToken; account?: Account | null }) {
       try {
