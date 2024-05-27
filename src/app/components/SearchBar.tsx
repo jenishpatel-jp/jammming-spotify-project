@@ -23,7 +23,7 @@ const SearchBar: React.FC<SearchBarProps> = ( {onSearch} ) => {
         <div className='flex w-full'>
             <input
             placeholder='Search for a Song or Artist here'
-            className='h-10 w-full text-center text-black'
+            className='h-10 w-full text-center text-purple-500 bg-pink-200 border'
             onChange={handleTermChange}
             onKeyDownCapture={ e => {if (e.key === 'Enter'){
                 console.log(`I have pressed enter and I am searching for ${term}`)
@@ -33,7 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ( {onSearch} ) => {
             <button
             onClick={passTerm}
             >
-                <MagnifyingGlassIcon className = "text-black bg-white h-10 max-w-10" />
+                <MagnifyingGlassIcon className = "text-purple-500 bg-white h-10 max-w-10" />
             </button>
 
         </div>

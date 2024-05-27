@@ -190,11 +190,11 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col items-center min-h-screen p-5 bg-stone-900 text-white">
+    <main className="flex flex-col items-center min-h-screen p-5 bg-white text-purple-500">
       <Header/>
       <h1 className="m-4 p-5 text-5xl">Jammming</h1>
       <SearchBar onSearch={search} />
-      <div className="border flex flex-row mt-4 flex-1 w-full justify-between">
+      <div className="border flex flex-row mt-4 flex-1 w-full justify-between border-yellow-500">
         <SearchResults searchResults={searchResults} onAdd={addTrack} />
         <Playlist playlistTracks={playlistTracks} onRemove={removeTrack} onNameChange={updatePlaylistName} savePlaylist={savePlaylist} />
       </div>

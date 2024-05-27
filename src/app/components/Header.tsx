@@ -12,7 +12,7 @@ const Header = () => {
         <div className="self-end">
             {session? (
                 <button 
-                className="m-1 border border-spacing-2 rounded p-2"
+                className="m-1 border border-spacing-2 rounded p-2 hover:bg-pink-200"
                 onClick={() => signOut()}
                 >
                     Sign Out
@@ -20,7 +20,7 @@ const Header = () => {
             ): 
             (
                 <button
-                className="m-1 border border-spacing-2 rounded p-2"
+                className="m-1 border border-spacing-2 rounded p-2 hover:bg-pink-200"
                 onClick={() => signIn()}
                 >
                     Sign In
