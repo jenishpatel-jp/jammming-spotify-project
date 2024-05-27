@@ -9,7 +9,7 @@ interface SearchResultsProps {
 
 const SearchResults: React.FC<SearchResultsProps> = ({searchResults, onAdd}) => {
   return (
-    <div className='flex flex-col flex-1 border-2 border-purple-500 mr-10 p-2'>
+    <div className='flex flex-col flex-1 border-4 border-purple-500 mr-10 ml-10 mt-10 p-2 shadow-lg'>
       <div className='mx-2 my-5' >
         <TrackList tracks={searchResults} onAdd={onAdd} isRemoval={false} />
       </div>

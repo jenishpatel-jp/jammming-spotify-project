@@ -21,18 +21,18 @@ const Playlist: React.FC<PlaylistProps> = ({
   };
 
   return (
-    <div className="flex flex-col flex-1 justify-items-center border-2 border-purple-500 ml-10 p-2" >
+    <div className="flex flex-col flex-1 justify-items-center border-4 border-purple-500 ml-10 mr-10 mt-10 p-2 shadow-lg" >
       
       <input 
-      defaultValue={"Enter Playlist Name"} 
+      placeholder="Enter Playlist Name"
       onChange={handleNameChange} 
-      className="border-2 text-center mx-2 my-4 text-xl p-4 text-purple focus:border-purple-500"
+      className="border-4 text-center mx-2 my-4 text-xl p-4 rounded-md border-pink-200 shadow-md font-medium active:border-purple-500 focus:border-purple-500 focus:outline-none placeholder-purple-500"
       />
 
       <TrackList tracks={playlistTracks} onRemove={onRemove}  isRemoval={true} />
 
       <button 
-      className="border rounded-md w-fit p-5 mx-auto hover:bg-pink-200 text"
+      className="border-4 rounded-md w-fit p-5 mx-auto hover:bg-pink-200 border-pink-200 shadow-md text-lg font-bold mt-7"
       onClick={savePlaylist}
       >
         SAVE TO SPOTIFY

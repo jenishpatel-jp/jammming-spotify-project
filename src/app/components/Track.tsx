@@ -20,9 +20,9 @@ const Track: React.FC<TrackProps> = ({track, isRemoval, onAdd, onRemove}) => {
 
     const renderAction = () => {
         if (isRemoval) {
-            return <button className='text-2xl mx-10 hover:text-4xl p-7 rounded-full' onClick={passTrackToRemove} >-</button>
+            return <button className='text-2xl mx-10 hover:text-4xl p-7 rounded-full font-bold' onClick={passTrackToRemove} >-</button>
         } else {
-            return <button className='text-2xl mx-10 hover:text-4xl p-7 rounded-full' onClick={passTrack} >+</button>
+            return <button className='text-2xl mx-10 hover:text-4xl p-7 rounded-full font-bold' onClick={passTrack} >+</button>
         }
     }
 
@@ -39,7 +39,7 @@ const Track: React.FC<TrackProps> = ({track, isRemoval, onAdd, onRemove}) => {
     }
 
     return (
-        <div className='flex flex-row justify-between hover:bg-pink-200 rounded-md' >
+        <div className='flex flex-row justify-between hover:bg-pink-200 rounded-md hover:shadow-lg' >
             <div className='mx-2 my-4 p-2 rounded-md flex-1'>
                 <h3 className='text-xl font-bold' >{track.name}</h3>
                 <p>{track.artist} | {track.album} </p>

@@ -192,7 +192,7 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center min-h-screen p-5 bg-white text-purple-500">
       <Header/>
-      <h1 className="m-4 p-5 text-5xl">Jammming</h1>
+      <h1 className="m-4 p-5 text-5xl font-extrabold">Jammming</h1>
       <SearchBar onSearch={search} />
       <div className="flex flex-row mt-4 flex-1 w-full justify-between">
         <SearchResults searchResults={searchResults} onAdd={addTrack} />
