@@ -46,6 +46,7 @@ const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  
   callbacks: {
     async jwt({ token, account }: { token: CustomToken; account?: Account | null }) {
       try {
