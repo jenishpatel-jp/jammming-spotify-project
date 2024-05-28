@@ -35,7 +35,6 @@ const SearchBar: React.FC<SearchBarProps> = ( {onSearch} ) => {
             >
                 <MagnifyingGlassIcon className = "text-purple-500 bg-pink-200 h-10 max-w-10" />
             </button>
-
         </div>
     )
 }
