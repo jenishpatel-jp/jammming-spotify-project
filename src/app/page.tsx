@@ -5,10 +5,11 @@ import SearchBar from "./components/SearchBar";
 import { useEffect, useState } from 'react';
 import SearchResults from "./components/SearchResults";
 import Playlist from "./components/Playlist";
-import { useSession, signIn} from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from 'next/navigation'; // Adjusting for Next.js App Router
 
 export interface Tracks {
-  id:string;
+  id: string;
   name: string;
   artist: string;
   album: string;
@@ -16,7 +17,7 @@ export interface Tracks {
 }
 
 interface CustomSessionUser {
-  accessToken?: string; 
+  accessToken?: string;
   refreshToken?: string;
   accessTokenExpires: number;
   name?: string;
@@ -25,7 +26,8 @@ interface CustomSessionUser {
 }
 
 export default function Home() {
-  const {data: session} = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [accessToken, setAccessToken] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Tracks[]>([]);
   const [playlistName, setPlayListName] = useState<string>("");
@@ -33,14 +35,23 @@ export default function Home() {
   const [userID, setUserID] = useState<string>("");
 
   useEffect(() => {
+    if (status === "loading") {
+      // Loading state, do nothing
+      return;
+    }
+
+    if (status === "unauthenticated") {
+      // User is not authenticated, redirect to login page
+      router.push('/api/auth/signin');
+    }
+
     if (session?.user) {
       const user = session.user as CustomSessionUser;
-      console.log("Session user:", user)
+      console.log("Session user:", user);
       setAccessToken(user.accessToken || "");
-    };
-    console.log(session)
-  }, 
-  [session]);
+    }
+    console.log(session);
+  }, [status, session, router]);
 
   const refreshAccessToken = async (refreshToken: string) => {
     try {
@@ -49,28 +60,25 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({refreshToken})
+        body: JSON.stringify({ refreshToken })
       });
 
-      if (!response.ok){
-        throw new Error('Failed to refresh access token')
+      if (!response.ok) {
+        throw new Error('Failed to refresh access token');
       }
-      
+
       const data = await response.json();
       console.log('New access token:', data.accessToken);
 
       setAccessToken(data.accessToken);
 
-    } catch(error) {
-      console.error('Failed to refresh access token:', error)
+    } catch (error) {
+      console.error('Failed to refresh access token:', error);
       signIn();
     }
   };
 
-
-
   useEffect(() => {
-
     const getUserProfile = async () => {
       if (!accessToken) {
         console.log('Access token not available yet');
@@ -87,15 +95,15 @@ export default function Home() {
       try {
         console.log('Fetching user profile with access token:', accessToken);
         const response = await fetch('https://api.spotify.com/v1/me', searchParameters);
-        if (response.status === 401){
+        if (response.status === 401) {
           const user = session?.user as CustomSessionUser;
-          if (user.refreshToken){
-            console.log('Access token expired, refresshing...');
+          if (user.refreshToken) {
+            console.log('Access token expired, refreshing...');
             await refreshAccessToken(user.refreshToken);
           } else {
             throw new Error('No refresh token available');
           }
-        } else if (response.ok){
+        } else if (response.ok) {
           const data = await response.json();
           setUserID(data.id);
         } else {
@@ -111,7 +119,6 @@ export default function Home() {
 
   console.log(`user id is: ${userID}`);
 
-
   const addTrack = (track: Tracks) => {
     const existingTrack = playlistTracks.find(playlistTrack => playlistTrack.id === track.id);
     if (existingTrack) {
@@ -126,7 +133,7 @@ export default function Home() {
     setPlaylistTracks(updatedPlaylist);
   }
 
-  const updatePlaylistName = (name:string) => {
+  const updatePlaylistName = (name: string) => {
     setPlayListName(name);
   }
 
@@ -139,9 +146,7 @@ export default function Home() {
     }
   }
 
-
-
-  const search = async (term:string) => {
+  const search = async (term: string) => {
     console.log(term);
 
     try {
@@ -150,20 +155,20 @@ export default function Home() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      const searchedSongs = data.tracks.items.map((x:any) => ({
+      const searchedSongs = data.tracks.items.map((x: any) => ({
         id: x.id,
-        name: x.name, 
+        name: x.name,
         artist: x.artists[0].name,
         album: x.album.name,
         uri: x.uri
-        }));
-        setSearchResults(searchedSongs);
+      }));
+      setSearchResults(searchedSongs);
     } catch (error) {
       console.error('failed to search for songs: ', error)
     }
   }
 
-  const savePlaylist = async() => {
+  const savePlaylist = async () => {
     try {
       const spotifyPlaylistName = playlistName;
       console.log(accessToken)
@@ -173,11 +178,11 @@ export default function Home() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`
         },
-        body: JSON.stringify({name: spotifyPlaylistName, description:'Temporary playlist description', public: true})
+        body: JSON.stringify({ name: spotifyPlaylistName, description: 'Temporary playlist description', public: true })
       };
 
-      const createPlayListResponse = await fetch (`https://api.spotify.com/v1/users/${userID}/playlists`, createPlaylistParameters);
-      if (!createPlayListResponse.ok){
+      const createPlayListResponse = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, createPlaylistParameters);
+      if (!createPlayListResponse.ok) {
         throw new Error(`Failed to create playlist. Status: ${createPlayListResponse.status}`);
       }
 
@@ -191,7 +196,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center min-h-screen p-5 bg-white text-purple-500">
-      <Header/>
+      <Header />
       <h1 className="m-4 p-5 text-5xl font-extrabold">Jammming</h1>
       <SearchBar onSearch={search} />
       <div className="flex flex-row mt-4 flex-1 w-full justify-between">
