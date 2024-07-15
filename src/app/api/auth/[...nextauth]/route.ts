@@ -1,6 +1,7 @@
-import NextAuth, { NextAuthOptions, Session, Account, Profile as NextAuthProfile, User } from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { JWT } from "next-auth/jwt";
+import { Account, User, Profile as NextAuthProfile, Session as DefaultSession } from "next-auth";
 
 interface SpotifyProfile extends NextAuthProfile {
   id?: string;
@@ -14,7 +15,7 @@ interface CustomToken extends JWT {
   accessTokenExpires?: number;
 }
 
-interface CustomSession extends Session {
+interface CustomSession extends DefaultSession {
   user: {
     id?: string;
     accessToken?: string;
@@ -26,7 +27,7 @@ interface CustomSession extends Session {
   };
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID ?? "",
@@ -47,59 +48,25 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,
-
   callbacks: {
     async jwt({ token, account }: { token: CustomToken; account?: Account | null }) {
-      try {
-        if (account) {
-          console.log("Account:", account);
-          token.accessToken = account.access_token;
-          token.refreshToken = account.refresh_token;
-          token.accessTokenExpires = (account.expires_at ? account.expires_at : Date.now() / 1000) * 1000;
-        }
-        return token;
-      } catch (error) {
-        console.error("JWT Callback Error:", error);
-        throw error;
+      if (account) {
+        token.accessToken = account.access_token;
+        token.refreshToken = account.refresh_token;
+        token.accessTokenExpires = (account.expires_at ? account.expires_at : Date.now() / 1000) * 1000;
       }
+      return token;
     },
-
-
-    async session({ session, token }: { session: Session; token: CustomToken }) {
-
-      try {
-
-        const customSession = session as CustomSession;
-
-        if (!customSession.user) {
-          customSession.user = {
-            id: "",
-            accessToken: undefined,
-            refreshToken: undefined,
-            accessTokenExpires: undefined,
-            name: null,
-            email: null,
-            image: null,
-          };
-        }
-  
-        customSession.user.accessToken = token.accessToken;
-        customSession.user.refreshToken = token.refreshToken;
-        customSession.user.accessTokenExpires = token.accessTokenExpires;
-  
-        return customSession;
-
-      } catch (error){
-        console.error("Session Callback Error:", error);
-        throw error;
-      }
-        
+    async session({ session, token }: { session: DefaultSession; token: CustomToken }) {
+      const customSession = session as CustomSession;
+      customSession.user.accessToken = token.accessToken;
+      customSession.user.refreshToken = token.refreshToken;
+      customSession.user.accessTokenExpires = token.accessTokenExpires;
+      return customSession;
     },
   },
 };
 
-// The handler function for NextAuth
 const handler = NextAuth(authOptions);
 
-// Export named handlers for GET and POST methods
 export { handler as GET, handler as POST };
